@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 // App code
             }
         });
-
+         //
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "com.facebook.samples.loginhowto",
