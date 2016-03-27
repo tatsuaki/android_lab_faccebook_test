@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -63,12 +64,10 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "onSuccess", Toast.LENGTH_SHORT).show();
                 // App code
             }
-
             @Override
             public void onCancel() {
                 // App code
             }
-
             @Override
             public void onError(FacebookException exception) {
                 // App code
@@ -77,8 +76,7 @@ public class MainActivity extends AppCompatActivity {
          //
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.facebook.samples.loginhowto",
-                    PackageManager.GET_SIGNATURES);
+                    "com.facebook.samples.loginhowto", PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
@@ -88,22 +86,25 @@ public class MainActivity extends AppCompatActivity {
         } catch (NoSuchAlgorithmException e) {
         }
 
+        String as[] = Build.SUPPORTED_64_BIT_ABIS;
+        for (String mam : as) {
+            Toast.makeText(this, mam, Toast.LENGTH_SHORT).show();
+        }
         String[] mana = new String[] {
                                 Manifest.permission.ACCOUNT_MANAGER,
                                 Manifest.permission.READ_CONTACTS};
-        if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            // permissionが許可されていません
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-                // 許可ダイアログで今後表示しないにチェックされていない場合
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                // permissionが許可されていません
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+                    // 許可ダイアログで今後表示しないにチェックされていない場合
+                }
+                // permissionを許可してほしい理由の表示など
+                // 許可ダイアログの表示
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTSはアプリ内で独自定義したrequestCodeの値
+                requestPermissions(mana, 2);
             }
-            // permissionを許可してほしい理由の表示など
-            // 許可ダイアログの表示
-            // MY_PERMISSIONS_REQUEST_READ_CONTACTSはアプリ内で独自定義したrequestCodeの値
-            requestPermissions(mana, 2);
-
-            return;
         }
-
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -117,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                     // ユーザーが許可しなかったとき
                     // 許可されなかったため機能が実行できないことを表示する
                 }
-                return;
             }
         }
     }

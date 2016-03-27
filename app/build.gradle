@@ -3,10 +3,19 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         keys {
-            keyAlias 'fb_key'
-            keyPassword 'makimaki3'
-            storeFile file('C:/Users/maki/Desktop/AndroidStudio_work/FacebookTests/keys/FBkeyFile.jks')
-            storePassword 'makimaki3'
+            try {
+                File keystorePropertiesFile = file('../keystore/release.properties')
+                storeFile file('../keystore/FBkeyFile.jks')
+                Properties properties = new Properties()
+                keystorePropertiesFile.withInputStream {
+                    properties.load(it)
+                }
+                keyAlias properties.getProperty('KEY_ALIAS')
+                keyPassword properties.getProperty('KEYSTORE_PASSWORD')
+                storePassword properties.getProperty('KEYSTORE_PASSWORD')
+            } catch (ex) {
+                throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in release.properties.")
+            }
         }
     }
     compileSdkVersion 23
@@ -19,24 +28,28 @@ android {
         versionName "1.0"
     }
     productFlavors {
-        release_ {
-        }
         dev_ {
             applicationId 'com.test.kin.my.testes.tes.fbtestappdev'
         }
         stg_ {
             applicationId 'com.test.kin.my.testes.tes.fbtestappstg'
         }
+        pro_ {
+        }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             jniDebuggable false
             signingConfig signingConfigs.keys
         }
         debug {
+            debuggable true
+            jniDebuggable true
+            applicationIdSuffix = '.deb'
+            versionNameSuffix = 'd'
         }
     }
 }
@@ -44,6 +57,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
