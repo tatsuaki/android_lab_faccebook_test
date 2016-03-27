@@ -1,3 +1,5 @@
+<!--suppress ALL, XmlUnboundNsPrefix -->
+
 <resources>
     <string name="app_name">FBTestApp-dev</string>
     <string name="facebook_app_id">932437186876481</string>

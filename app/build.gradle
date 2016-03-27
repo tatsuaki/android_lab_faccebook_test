@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         keys {
+            //noinspection GroovyUnusedCatchParameter
             try {
                 File keystorePropertiesFile = file('../keystore/release.properties')
                 storeFile file('../keystore/FBkeyFile.jks')
@@ -13,7 +14,7 @@ android {
                 keyAlias properties.getProperty('KEY_ALIAS')
                 keyPassword properties.getProperty('KEYSTORE_PASSWORD')
                 storePassword properties.getProperty('KEYSTORE_PASSWORD')
-            } catch (ex) {
+            } catch (ignored) {
                 throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in release.properties.")
             }
         }
@@ -34,6 +35,7 @@ android {
         stg_ {
             applicationId 'com.test.kin.my.testes.tes.fbtestappstg'
         }
+        //noinspection GroovyMissingReturnStatement
         pro_ {
         }
     }
@@ -43,12 +45,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             jniDebuggable false
+            //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.keys
         }
         debug {
             debuggable true
             jniDebuggable true
             applicationIdSuffix = '.deb'
+            //noinspection GroovyAssignabilityCheck
             versionNameSuffix = 'd'
         }
     }

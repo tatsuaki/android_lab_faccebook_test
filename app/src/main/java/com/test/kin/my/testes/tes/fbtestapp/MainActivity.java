@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -31,9 +32,9 @@ import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
-    public LoginButton loginButton;
-    public CallbackManager callbackManager;
-    String MY_PERMISSIONS_REQUEST_READ_CONTACTS = "1";
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
+    // --Commented out by Inspection (2016/03/27 16:50):String MY_PERMISSIONS_REQUEST_READ_CONTACTS = "1";
 
     @SuppressLint("NewApi")
     @Override
@@ -82,8 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 md.update(signature.toByteArray());
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        } catch (PackageManager.NameNotFoundException e) {
-        } catch (NoSuchAlgorithmException e) {
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
         }
 
         String as[] = Build.SUPPORTED_64_BIT_ABIS;
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             // 先ほどの独自定義したrequestCodeの結果確認
             case 2: {
